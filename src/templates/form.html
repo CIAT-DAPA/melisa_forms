@@ -1,0 +1,111 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+<h5 class="" style="margin-left: 15px;">In this section, you will be able to add, edit, and delete data corresponding to forms.</h5>
+
+<div class="container-fluid  mt-5" style="height: 100%; margin-bottom: 250px;" >
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible fade show position-fixed bottom-0 end-0 p-3 auto-dismiss-alert" role="alert" style="max-width: 300px;">
+        <div class="pe-4" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+            {{ message }}
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    
+    {% endfor %} 
+    {% endif %}
+    {% endwith %}
+
+    
+
+        <!-- right table to edit adm     -->
+        <div class="container">
+            <div class="container-md d-flex justify-content-between align-items-center">
+                <h2>List of form</h2>
+                <a href="/addform" class="btn btn-primary">Add Form <i class="fas fa-plus"></i></a>
+            </div>
+            
+            
+            <table id="example" class="table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Command</th>
+                        <th>status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for frm in form %}
+                    <tr>
+                        <td>{{ frm.name }}</td>
+                        <td>{{ frm.command }}</td>
+                        <td>{{ "Enabled" if frm.track.enable else "Disabled" }}</td>
+                        <td>
+                            <div class="text-center">
+                                {% if frm.track.enable %}
+                                    <a href="/edit/{{ frm.id }}" class="btn btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="fas fa-edit"></i> </a>
+                                    <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ frm.id }}" data-bs-tooltip title="Delete"><i class="fas fa-trash-alt"></i></a>
+                                {% else %}
+                                <a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#reset-{{ frm.id }}" data-bs-tooltip title="Recover"><i class="fas fa-undo"></i></a>
+                                {% endif %}
+                            </div>
+                            
+                            
+                            
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                
+            </table>
+            
+            
+           
+        </div>
+    </div>
+</div>
+
+{% for frm in form %}
+    <div class="modal fade" id="deleteModal-{{ frm.id }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ frm.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel-{{ frm.id }}">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete "{{ frm.name }}"?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a href="/delete/{{ frm.id }}" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="reset-{{ frm.id }}" tabindex="-1" aria-labelledby="reset-{{ frm.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reset-{{ frm.id }}">Confirm Recover</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to recover "{{ frm.name }}"?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a href="/reset/{{ frm.id }}" class="btn btn-success">Recover</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+
+{% endblock %}

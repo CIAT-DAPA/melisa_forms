@@ -1,0 +1,33 @@
+{%extends 'layout.html' %}
+{% block body%}
+<div class="container-fluid d-flex justify-content-center " style="min-height: 80vh;">
+    <div class="col-md-6">
+        <h2 class="card-title text-center">Edit Form</h2>
+    
+        <div class="card">
+    
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST" action="/edit/{{form.id}}">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Edit Form:</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{form.name}}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="command" class="form-label">Command</label>
+                            <input type="text" class="form-control" id="command" name="command" value="{{form.command}}" required>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-warning edit-button" type="button">
+                              <i class="fas fa-edit"></i> Edit
+                          </button>
+                          
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%endblock%}

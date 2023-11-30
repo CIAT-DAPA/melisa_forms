@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row justify-content-center align-items-center vh-100">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center">Add Form</h2>
+                    <p class="">Fill in the fields</p>
+                    <form method="POST" action="/form/add">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name Form:</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="command" class="form-label">Command</label>
+                            <input type="text" class="form-control" id="command" name="command" required>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary save-button">
+                                Save <i class="fas fa-save"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
