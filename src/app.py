@@ -1,7 +1,7 @@
 from flask import Flask
 from mongoengine import connect
 from routes.form import form_bp
-
+from routes.action import action_bp
 from config import config
 import os
 
@@ -11,6 +11,7 @@ app.secret_key = os.urandom(24)
 
 
 app.register_blueprint(form_bp)
+app.register_blueprint(action_bp)
 
 
 if __name__ == '__main__':
