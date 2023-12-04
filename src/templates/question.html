@@ -1,0 +1,124 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+<h5 class="" style="margin-left: 15px;">In this section, you will be able to add, edit, and delete data corresponding to actions.</h5>
+
+<div class="container-fluid  mt-5" style="height: 100%; margin-bottom: 250px;" >
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible fade show position-fixed bottom-0 end-0 p-3 auto-dismiss-alert" role="alert" style="max-width: 300px;">
+        <div class="pe-4" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+            {{ message }}
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    
+    {% endfor %} 
+    {% endif %}
+    {% endwith %}
+
+    
+
+        <!-- right table to edit adm     -->
+        <div class="container">
+            <div class="container-md d-flex justify-content-between align-items-center">
+                <h2>List of form</h2>
+                <a href="/addquestion" class="btn btn-primary">Add Question<i class="fas fa-plus"></i></a>
+            </div>
+            
+            
+            <table id="example" class="table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Form</th>
+                        <th>Description</th>
+                        <th>Kind</th>
+                        <th>Order</th>
+                        <th>Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for q in question %}
+                    <tr>
+                        <td>{{ q.name }}</td>
+                        <td>
+                            {% for frm in form %}
+                            {% if frm.id == q.form.id %}
+                            {{ frm.name }}
+                            {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>{{ q.description }}</td>
+                        <td>{{ q.kind.value }}</td>
+                        <td>{{ q.order }}</td>
+                        
+                        <td>{{ "Enabled" if q.track.enable else "Disabled" }}</td>
+                        <td>
+                            <div class="text-center">
+                                {% if q.track.enable %}
+                                    <a href="/editquestion/{{ q.id }}" class="btn btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="fas fa-edit"></i> </a>
+                                    <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ q.id }}" data-bs-tooltip title="Delete"><i class="fas fa-trash-alt"></i></a>
+                                {% else %}
+                                <a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#reset-{{ q.id }}" data-bs-tooltip title="Recover"><i class="fas fa-undo"></i></a>
+                                {% endif %}
+                            </div>
+                            
+                            
+                            
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                
+            </table>
+            
+            
+           
+        </div>
+    </div>
+</div>
+
+{% for q in question %}
+    <div class="modal fade" id="deleteModal-{{ q.id }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ q.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel-{{ q.id }}">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete "{{ q.name }}"?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a href="/deletequestion/{{ q.id }}" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="reset-{{ q.id }}" tabindex="-1" aria-labelledby="reset-{{ q.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reset-{{ q.id }}">Confirm Recover</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to recover "{{ q.name }}"?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a href="/resetquestion/{{ q.id }}" class="btn btn-success">Recover</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+
+{% endblock %}

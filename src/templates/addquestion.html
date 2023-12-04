@@ -1,0 +1,88 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row justify-content-center align-items-center vh-100">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center">Add Question</h2>
+                    <p class="">Fill in the fields</p>
+                    <form method="POST" action="/question/add">
+                        <div class="mb-3">
+                            <label for="form" class="form-label">Select Form:</label>
+                            <select class="form-select" id="formu" name="formu" required>
+                                <option value="" disabled selected>Select Form</option>
+                                {% for frm in form %}
+                                    <option value="{{ frm.id }}">{{ frm.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name question:</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Description:</label>
+                            <input type="text" class="form-control" id="description" name="description" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="form" class="form-label">Select Kind</label>
+                            <select class="form-select" id="kind" name="kind" required>
+                                <option value="" disabled selected>Select Action</option>
+                                {% for qe in questionsenum %}
+                                <option value="{{ qe.value }}">{{ qe.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                       
+                        <div class="mb-3">
+                            <label for="order" class="form-label">Order</label>
+                            <input type="number" class="form-control" id="order" name="order" >
+                        </div>
+                        <div id="validations">
+                            <h3 class="text-center">Validations</h3>
+                            <div id="validation-container"></div>
+                            <button type="button" class="btn btn-primary" id="addValidation">Add Validation</button>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary save-button">
+                                Save <i class="fas fa-save"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('addValidation').addEventListener('click', function() {
+        var newValidation = document.createElement('div');
+        newValidation.className = 'mb-3 validation-fields';
+
+        var nameField = document.createElement('div');
+        nameField.innerHTML = '<label for="validation_name" class="form-label">Name:</label><input type="text" class="form-control" name="validation_name[]" required>';
+        newValidation.appendChild(nameField);
+
+        var expField = document.createElement('div');
+        expField.innerHTML = '<label for="validation_exp" class="form-label">Expression:</label><input type="text" class="form-control" name="validation_exp[]" required>';
+        newValidation.appendChild(expField);
+
+        var errorMsgField = document.createElement('div');
+        errorMsgField.innerHTML = '<label for="validation_error_msg" class="form-label">Error Message:</label><input type="text" class="form-control" name="validation_error_msg[]" required>';
+        newValidation.appendChild(errorMsgField);
+
+        var deleteButton = document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.className = 'btn btn-danger delete-validation';
+        deleteButton.textContent = 'Delete Validation';
+        deleteButton.addEventListener('click', function() {
+            newValidation.remove();
+        });
+        newValidation.appendChild(deleteButton);
+
+        document.getElementById('validation-container').appendChild(newValidation);
+    });
+</script>
+
+{% endblock %}
