@@ -11,7 +11,7 @@ def show_form():
     return render_template('form.html', form=form)
 @form_bp.route('/addform')
 def addd_form():
-    form = Form.objects(trace__enabled=True)
+    form = Form.objects()
     return render_template('addform.html', form=form)
 
 @form_bp.route('/form/add', methods=['POST'])

@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row justify-content-center align-items-center vh-100">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center">Add Action</h2>
+                    <p class="">Fill in the fields</p>
+                    <form method="POST" action="/action/add">
+                        <div class="mb-3">
+                            <label for="form" class="form-label">Select Form:</label>
+                            <select class="form-select" id="formu" name="formu" required>
+                                <option value="" disabled selected>Select Form</option>
+                                {% for frm in form %}
+                                    <option value="{{ frm.id }}">{{ frm.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="form" class="form-label">Select Action:</label>
+                            <select class="form-select" id="request" name="request" required>
+                                <option value="" disabled selected>Select Action</option>
+                                {% for act in actionsenum %}
+                                <option value="{{ act.value }}">{{ act.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name Action:</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="callurl" class="form-label">Call url</label>
+                            <input type="text" class="form-control" id="callurl" name="callurl" pattern="https?://.+">
+
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary save-button">
+                                Save <i class="fas fa-save"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
