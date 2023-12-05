@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, redirect, request, flash
 from flask_login import login_required  
-from melisaORM.models.form import Form
-from melisaORM import Track,Validation
-from melisaORM.models.question import Question,QuestionKindEnum
+from melisa_orm.models.form import Form
+from melisa_orm import Track,Validation
+from melisa_orm.models.question import Question,QuestionKindEnum
 from datetime import datetime
 
 question_bp = Blueprint('question', __name__)
@@ -41,7 +41,7 @@ def add_question():
     question.save()
 
     flash("Question added successfully")
-    return redirect('/form')
+    return redirect('/question')
 @question_bp.route('/editquestion/<string:question_id>', methods=['GET', 'POST'])
 def edit_question(question_id):
     question = Question.objects(id=question_id).first()
@@ -73,3 +73,35 @@ def edit_question(question_id):
         return redirect('/question')
 
     return render_template('edit_question.html', question=question, forms=forms, questionsenum=QuestionKindEnum)
+
+@question_bp.route('/deletequestion/<string:question_id>')
+def delete_question(question_id):
+    question = Question.objects(id=question_id).first()
+
+    if question:
+        track = question.track
+
+        track['enable'] = False
+        track['user'] = 'deleted by yo'
+        question.update(track=track)
+        flash("question deleted successfully")
+    else:
+        flash("question not found")
+
+    return redirect('/question')
+
+@question_bp.route('/resetquestion/<string:question_id>')
+def reset_question(question_id):
+    question = Question.objects(id=question_id).first()
+
+    if question:
+        track = question.track
+
+        track['enable'] = True
+        track['user'] = 'recover by yo'
+        question.update(track=track)
+        flash("question recover successfully")
+    else:
+        flash("question not found")
+
+    return redirect('/question')

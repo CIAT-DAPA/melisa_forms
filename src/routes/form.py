@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, request, flash
 from flask_login import login_required  
-from melisaORM.models.form import Form,Track
+from melisa_orm.models.form import Form,Track
 from datetime import datetime
 
 form_bp = Blueprint('form', __name__)
@@ -19,8 +19,9 @@ def add_form():
     track=Track(user='user',created=datetime.now(), updated=datetime.now,enable=True) #user will be replace with the current user
     name = request.form['name']
     command = request.form['command']
+    ext_id = request.form['ext_id']
     track = track
-    form = Form(name=name, command=command,track=track)
+    form = Form(name=name, command=command,track=track,ext_id=ext_id)
     form.save()
     flash("form added succesfully")
     return redirect('/form')
@@ -28,15 +29,16 @@ def add_form():
 @form_bp.route('/edit/<string:form_id>', methods=['GET', 'POST'])
 def edit_form(form_id):
     form = Form.objects(id=form_id).first()
-    """ json_data = [{"id":str(x.id),"name":x.name,"ext_id":x.ext_id} for x in form] """
     
     if request.method == 'POST':
         name = request.form['name']
         command = request.form['command']
+        ext_id = request.form['ext_id']
+
         track = form.track
         track['updated'] = datetime.now()
         track['user'] = 'fui yo ahora' #it will be replace with the current user
-        form.update(name=name, command=command, track=track)
+        form.update(name=name, command=command, track=track,ext_id=ext_id)
 
         flash("form updated successfully")
         return redirect('/form')

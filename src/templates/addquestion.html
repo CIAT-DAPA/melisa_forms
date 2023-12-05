@@ -28,7 +28,7 @@
                         <div class="mb-3">
                             <label for="form" class="form-label">Select Kind</label>
                             <select class="form-select" id="kind" name="kind" required>
-                                <option value="" disabled selected>Select Action</option>
+                                <option value="" disabled selected>Select Kind</option>
                                 {% for qe in questionsenum %}
                                 <option value="{{ qe.value }}">{{ qe.name }}</option>
                                 {% endfor %}
@@ -42,7 +42,9 @@
                         <div id="validations">
                             <h3 class="text-center">Validations</h3>
                             <div id="validation-container"></div>
-                            <button type="button" class="btn btn-primary" id="addValidation">Add Validation</button>
+                            <button type="button" class="btn btn-success add-button add" title="Add Field" id="addValidation">
+                                <i class="fas fa-plus"></i>
+                            </button>
                         </div>
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary save-button">
@@ -74,8 +76,16 @@
 
         var deleteButton = document.createElement('button');
         deleteButton.type = 'button';
-        deleteButton.className = 'btn btn-danger delete-validation';
-        deleteButton.textContent = 'Delete Validation';
+        deleteButton.className = 'btn btn-danger delete-validation float-end';
+        deleteButton.innerHTML = '<i class="fas fa-trash"></i> ';
+        deleteButton.style.width = '27px';
+        deleteButton.title= 'Delete field';
+        deleteButton.style.height = '27px';
+        deleteButton.style.borderRadius = '50%';
+        deleteButton.style.display = 'flex';
+        deleteButton.style.alignItems = 'center';
+        deleteButton.style.justifyContent = 'center';
+        deleteButton.style.margin = '10px';        
         deleteButton.addEventListener('click', function() {
             newValidation.remove();
         });

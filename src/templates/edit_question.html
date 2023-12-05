@@ -52,16 +52,20 @@
                                     <label for="validation_error_msg" class="form-label">Error Message:</label>
                                     <input type="text" class="form-control" name="validation_error_msg[]" value="{{ validation.error_msg }}" required>
 
-                                    <button type="button" class="btn btn-danger delete-validation">Delete Validation</button>
+                                    <button type="button" class="btn btn-danger delete-validation  float-end" title="Delete Field" style="width: 27px; height: 27px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 10px;">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    
                                 </div>
                             {% endfor %}
-                            <button type="button" class="btn btn-primary" id="addValidation">Add Validation</button>
+                            <button type="button" class="btn btn-success add-button add" title="Add Field" id="addValidation">
+                                <i class="fas fa-plus"></i>
+                            </button>
                         </div>
-                        <!-- Fin del Área de Validaciones -->
 
                         <div class="text-center">
-                            <button type="submit" class="btn btn-primary save-button">
-                                Save <i class="fas fa-save"></i>
+                            <button type="submit" class="btn btn-warning edit-button">
+                                Edit <i class="fas fa-edit"></i>
                             </button>
                         </div>
                     </form>
@@ -71,60 +75,68 @@
     </div>
 </div>
 
+
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    var validationsContainer = document.getElementById('validations');
-    var addValidationButton = document.getElementById('addValidation');
+    document.addEventListener('DOMContentLoaded', function() {
+        var validationsContainer = document.getElementById('validations');
+        var addValidationButton = document.getElementById('addValidation');
 
-    addValidationButton.addEventListener('click', function() {
-        var newValidation = document.createElement('div');
-        newValidation.className = 'mb-3 validation-fields';
+        addValidationButton.addEventListener('click', function() {
+            var newValidation = document.createElement('div');
+            newValidation.className = 'mb-3 validation-fields';
 
-        var nameLabel = document.createElement('label');
-        nameLabel.innerText = 'Name:';
-        var nameInput = document.createElement('input');
-        nameInput.type = 'text';
-        nameInput.className = 'form-control';
-        nameInput.name = 'validation_name[]';
-        var expLabel = document.createElement('label');
-        expLabel.innerText = 'Expression:';
-        var expInput = document.createElement('input');
-        expInput.type = 'text';
-        expInput.className = 'form-control';
-        expInput.name = 'validation_exp[]';
-        var errorMsgLabel = document.createElement('label');
-        errorMsgLabel.innerText = 'Error Message:';
-        var errorMsgInput = document.createElement('input');
-        errorMsgInput.type = 'text';
-        errorMsgInput.className = 'form-control';
-        errorMsgInput.name = 'validation_error_msg[]';
+            var nameLabel = document.createElement('label');
+            nameLabel.innerText = 'Name:';
+            var nameInput = document.createElement('input');
+            nameInput.type = 'text';
+            nameInput.className = 'form-control';
+            nameInput.name = 'validation_name[]';
+            var expLabel = document.createElement('label');
+            expLabel.innerText = 'Expression:';
+            var expInput = document.createElement('input');
+            expInput.type = 'text';
+            expInput.className = 'form-control';
+            expInput.name = 'validation_exp[]';
+            var errorMsgLabel = document.createElement('label');
+            errorMsgLabel.innerText = 'Error Message:';
+            var errorMsgInput = document.createElement('input');
+            errorMsgInput.type = 'text';
+            errorMsgInput.className = 'form-control';
+            errorMsgInput.name = 'validation_error_msg[]';
 
-        var deleteButton = document.createElement('button');
-        deleteButton.type = 'button';
-        deleteButton.className = 'btn btn-danger delete-validation';
-        deleteButton.innerText = 'Delete Validation';
+            var deleteButton = document.createElement('button');
+            deleteButton.type = 'button';
+            deleteButton.className = 'btn btn-danger delete-validation float-end';
+            deleteButton.innerHTML = '<i class="fas fa-trash"></i> ';
+            deleteButton.style.width = '27px';
+            deleteButton.title= 'Delete field';
+            deleteButton.style.height = '27px';
+            deleteButton.style.borderRadius = '50%';
+            deleteButton.style.display = 'flex';
+            deleteButton.style.alignItems = 'center';
+            deleteButton.style.justifyContent = 'center';
+            deleteButton.style.margin = '10px';
+            newValidation.appendChild(nameLabel);
+            newValidation.appendChild(nameInput);
+            newValidation.appendChild(expLabel);
+            newValidation.appendChild(expInput);
+            newValidation.appendChild(errorMsgLabel);
+            newValidation.appendChild(errorMsgInput);
+            newValidation.appendChild(deleteButton);
 
-        newValidation.appendChild(nameLabel);
-        newValidation.appendChild(nameInput);
-        newValidation.appendChild(expLabel);
-        newValidation.appendChild(expInput);
-        newValidation.appendChild(errorMsgLabel);
-        newValidation.appendChild(errorMsgInput);
-        newValidation.appendChild(deleteButton);
+            validationsContainer.insertBefore(newValidation, addValidationButton);
+        });
 
-        validationsContainer.insertBefore(newValidation, addValidationButton);
-
+        validationsContainer.addEventListener('click', function(event) {
+            if (event.target.classList.contains('delete-validation') ||
+                event.target.parentElement.classList.contains('delete-validation')) {
+                event.target.closest('.validation-fields').remove();
+            }
+        });
     });
-
-    validationsContainer.addEventListener('click', function(event) {
-        if (event.target.classList.contains('delete-validation')) {
-            event.target.parentNode.remove();
-        }
-    });
-});
-
-
-
 </script>
+
+
+
 
 {% endblock %}
