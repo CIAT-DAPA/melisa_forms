@@ -1,0 +1,113 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+<h5 class="" style="margin-left: 15px;">In this section, you will be able to add, edit, and delete data corresponding to Melisa.</h5>
+
+<div class="container-fluid  mt-5" style="height: 100%; margin-bottom: 250px;" >
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible fade show position-fixed bottom-0 end-0 p-3 auto-dismiss-alert" role="alert" style="max-width: 300px;">
+        <div class="pe-4" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+            {{ message }}
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    
+    {% endfor %} 
+    {% endif %}
+    {% endwith %}
+
+    
+
+        <div class="container">
+            <div class="container-md d-flex justify-content-between align-items-center">
+                <h2>List of Melisa</h2>
+                <a href="/addmelisa" class="btn btn-primary">Add Melisa <i class="fas fa-plus"></i></a>
+            </div>
+            
+            
+            <table id="example" class="table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Url Post</th>
+                        <th>Token</th>
+                        <th>Si hi</th>
+                        <th>Si wait</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ml in melisa %}
+                    <tr>
+                        <td>{{ ml.name }}</td>
+                        <td>{{ ml.url_post  }}</td>
+                        <td>{{ ml.token }}</td>
+                        <td>{{ ml.say_hi  }}</td>
+                        <td>{{ ml.say_wait  }}</td>
+                        
+                        <td>
+                            <div class="text-center">
+                                
+                                    <a href="/editmelisa/{{ ml.id }}" class="btn btn-warning" data-bs-toggle="tooltip" title="Edit"><i class="fas fa-edit"></i> </a>
+                                    <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ ml.id }}" data-bs-tooltip title="Delete"><i class="fas fa-trash-alt"></i></a>
+                               
+                            </div>
+                            
+                            
+                            
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                
+            </table>
+            
+            
+           
+        </div>
+    </div>
+</div>
+
+{% for ml in melisa %}
+    <div class="modal fade" id="deleteModal-{{ ml.id }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ ml.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel-{{ ml.id }}">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete "{{ ml.name }}"?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a href="/deletemelisa/{{ ml.id }}" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="reset-{{ ml.id }}" tabindex="-1" aria-labelledby="reset-{{ ml.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reset-{{ ml.id }}">Confirm Recover</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to recover "{{ ml.name }}"?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a href="/resetmelisa/{{ ml.id }}" class="btn btn-success">Recover</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+
+{% endblock %}

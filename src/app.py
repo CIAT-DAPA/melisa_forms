@@ -3,6 +3,7 @@ from mongoengine import connect
 from routes.form import form_bp
 from routes.action import action_bp
 from routes.question import question_bp
+from routes.melisa import melisa_bp
 from config import config
 import os
 
@@ -14,6 +15,7 @@ app.secret_key = os.urandom(24)
 app.register_blueprint(form_bp)
 app.register_blueprint(action_bp)
 app.register_blueprint(question_bp)
+app.register_blueprint(melisa_bp)
 
 
 if __name__ == '__main__':
