@@ -25,7 +25,13 @@ def add_question():
     validation_names = form_data.getlist('validation_name[]')
     validation_exps = form_data.getlist('validation_exp[]')
     validation_error_msgs = form_data.getlist('validation_error_msg[]')
-
+    if not validation_names:
+        validation_names = ['']
+    if not validation_exps:
+        validation_exps = ['']
+    if not validation_error_msgs:
+        validation_error_msgs = ['']
+    
     validations = [Validation(name=name, exp=exp, error_msg=error_msg) for name, exp, error_msg in zip(validation_names, validation_exps, validation_error_msgs)]
 
     question = Question(
@@ -53,7 +59,7 @@ def edit_question(question_id):
         validation_names = form_data.getlist('validation_name[]')
         validation_exps = form_data.getlist('validation_exp[]')
         validation_error_msgs = form_data.getlist('validation_error_msg[]')
-
+        
         validations = [Validation(name=name, exp=exp, error_msg=error_msg) for name, exp, error_msg in zip(validation_names, validation_exps, validation_error_msgs)]
 
         question.update(

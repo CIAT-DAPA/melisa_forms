@@ -18,15 +18,16 @@ def addd_melisa():
 
 @melisa_bp.route('/melisa/add', methods=['POST'])
 def add_melisa():
+    track=Track(user='user',created=datetime.now(), updated=datetime.now,enable=True)
     form_data = request.form
-
     name = form_data['name']
     url_post = form_data['urlpost']
     token = form_data['token']
     say_hi = form_data['sayhi'] == 'True' 
     say_wait = form_data['saywait'] == 'True'  
-    countries = form_data.getlist('countries[]')
+    countries = form_data.getlist('countries[]') if 'countries[]' in form_data else ['']
     
+
 
 
     melisa = Melisa(
@@ -36,6 +37,7 @@ def add_melisa():
         say_hi=say_hi,
         say_wait=say_wait,
         countries=countries,
+        track=track
     )
 
     melisa.save()
@@ -49,26 +51,28 @@ def edit_melisa(melisa_id):
     melisa = Melisa.objects(id=melisa_id).first()
 
     if request.method == 'POST':
+
         form_data = request.form
+        name = form_data['name']
+        url_post = form_data['urlpost']
+        token = form_data['token']
+        say_hi = form_data['sayhi'] == 'True' 
+        say_wait = form_data['saywait'] == 'True'  
+        countries = form_data.getlist('countries[]') if 'countries[]' in form_data else ['']
+        track = melisa.track
 
-        validation_names = form_data.getlist('validation_name[]')
-        validation_exps = form_data.getlist('validation_exp[]')
-        validation_error_msgs = form_data.getlist('validation_error_msg[]')
-
-        validations = [Validation(name=name, exp=exp, error_msg=error_msg) for name, exp, error_msg in zip(validation_names, validation_exps, validation_error_msgs)]
-
+        track['enable'] = True
+        track['user'] = 'edited by yo'
+        track['updated'] = datetime.now()
         melisa.update(
-            form=Form.objects.get(id=form_data['formu']),
-            name=form_data['name'],
-            description=form_data['description'],
-            order=int(form_data['order']),
-            validations=validations,
-            track__user='user yo', 
-            track__updated=datetime.now() 
+            name=name,
+            url_post=url_post,
+            token=token,
+            say_hi=say_hi,
+            say_wait=say_wait,
+            countries=countries,
+            track=track
         )
-
-
-
         flash("melisa updated successfully")
         return redirect('/melisa')
 
@@ -76,12 +80,13 @@ def edit_melisa(melisa_id):
 
 @melisa_bp.route('/deletemelisa/<string:melisa_id>')
 def delete_melisa(melisa_id):
-    melisa = melisa.objects(id=melisa_id).first()
+    melisa = Melisa.objects(id=melisa_id).first()
 
     if melisa:
         track = melisa.track
 
         track['enable'] = False
+        track['updated'] = datetime.now()
         track['user'] = 'deleted by yo'
         melisa.update(track=track)
         flash("melisa deleted successfully")
@@ -92,12 +97,13 @@ def delete_melisa(melisa_id):
 
 @melisa_bp.route('/resetmelisa/<string:melisa_id>')
 def reset_melisa(melisa_id):
-    melisa = melisa.objects(id=melisa_id).first()
+    melisa = Melisa.objects(id=melisa_id).first()
 
     if melisa:
         track = melisa.track
 
         track['enable'] = True
+        track['updated'] = datetime.now()
         track['user'] = 'recover by yo'
         melisa.update(track=track)
         flash("melisa recover successfully")
