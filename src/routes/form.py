@@ -6,6 +6,7 @@ from datetime import datetime
 form_bp = Blueprint('form', __name__)
 
 @form_bp.route('/form')
+@login_required
 def show_form():
     form = Form.objects()
     return render_template('form.html', form=form)

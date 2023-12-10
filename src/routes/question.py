@@ -4,10 +4,11 @@ from melisa_orm.models.form import Form
 from melisa_orm import Track,Validation
 from melisa_orm.models.question import Question,QuestionKindEnum
 from datetime import datetime
-
+from flask_login import login_required 
 question_bp = Blueprint('question', __name__)
 
 @question_bp.route('/question')
+
 def show_question():
     question = Question.objects()
     form= Form.objects(track__enable=True)

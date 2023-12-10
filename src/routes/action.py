@@ -7,7 +7,7 @@ from datetime import datetime
 
 action_bp = Blueprint('action', __name__)
 
-@action_bp.route('/action')
+@action_bp.route('/actions')
 def show_action():
     action = Action.objects()
     form= Form.objects(track__enable=True)
