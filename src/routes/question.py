@@ -4,21 +4,23 @@ from melisa_orm.models.form import Form
 from melisa_orm import Track,Validation
 from melisa_orm.models.question import Question,QuestionKindEnum
 from datetime import datetime
-from flask_login import login_required 
+from flask_login import login_required, current_user
 question_bp = Blueprint('question', __name__)
 
 @question_bp.route('/question')
-
+@login_required
 def show_question():
     question = Question.objects()
     form= Form.objects(track__enable=True)
     return render_template('question.html', question=question,form=form,questionsenum=QuestionKindEnum)
 @question_bp.route('/addquestion')
+@login_required
 def addd_question():
     form= Form.objects(track__enable=True)
     return render_template('addquestion.html',form=form,questionsenum=QuestionKindEnum)
 
 @question_bp.route('/question/add', methods=['POST'])
+@login_required
 def add_question():
 
     form_data = request.form
@@ -42,7 +44,7 @@ def add_question():
         kind=QuestionKindEnum(form_data['kind']),
         order=int(form_data['order']),
         validations=validations,
-        track=Track(user='user', created=datetime.now(), updated=datetime.now(), enable=True)  # Ajusta el usuario según tu lógica
+        track=Track(user=current_user.get_id(), created=datetime.now(), updated=datetime.now(), enable=True)  # Ajusta el usuario según tu lógica
     )
 
     question.save()
@@ -50,6 +52,7 @@ def add_question():
     flash("Question added successfully")
     return redirect('/question')
 @question_bp.route('/editquestion/<string:question_id>', methods=['GET', 'POST'])
+@login_required
 def edit_question(question_id):
     question = Question.objects(id=question_id).first()
     forms = Form.objects(track__enable=True)
@@ -70,7 +73,7 @@ def edit_question(question_id):
             kind=QuestionKindEnum(form_data['kind']),
             order=int(form_data['order']),
             validations=validations,
-            track__user='user yo', 
+            track__user=current_user.get_id(), 
             track__updated=datetime.now() 
         )
 
@@ -82,6 +85,7 @@ def edit_question(question_id):
     return render_template('edit_question.html', question=question, forms=forms, questionsenum=QuestionKindEnum)
 
 @question_bp.route('/deletequestion/<string:question_id>')
+@login_required
 def delete_question(question_id):
     question = Question.objects(id=question_id).first()
 
@@ -89,7 +93,7 @@ def delete_question(question_id):
         track = question.track
 
         track['enable'] = False
-        track['user'] = 'deleted by yo'
+        track['user'] = current_user.get_id()
         question.update(track=track)
         flash("question deleted successfully")
     else:
@@ -98,6 +102,7 @@ def delete_question(question_id):
     return redirect('/question')
 
 @question_bp.route('/resetquestion/<string:question_id>')
+@login_required
 def reset_question(question_id):
     question = Question.objects(id=question_id).first()
 
@@ -105,10 +110,14 @@ def reset_question(question_id):
         track = question.track
 
         track['enable'] = True
-        track['user'] = 'recover by yo'
+        track['user'] = current_user.get_id()
         question.update(track=track)
         flash("question recover successfully")
     else:
         flash("question not found")
 
     return redirect('/question')
+
+@question_bp.errorhandler(401)
+def unauthorized_handler(error):
+    return render_template('error.html'), 401

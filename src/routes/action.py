@@ -4,10 +4,11 @@ from melisa_orm.models.form import Form
 from melisa_orm import Track
 from melisa_orm.models.actions import Action,ActionRequestEnum
 from datetime import datetime
-
+from flask_login import current_user
 action_bp = Blueprint('action', __name__)
 
 @action_bp.route('/actions')
+
 def show_action():
     action = Action.objects()
     form= Form.objects(track__enable=True)
@@ -19,7 +20,7 @@ def addd_action():
 
 @action_bp.route('/action/add', methods=['POST'])
 def add_action():
-    track=Track(user='user',created=datetime.now(), updated=datetime.now,enable=True) #user will be replace with the current user
+    track=Track(user=current_user.get_id(),created=datetime.now(), updated=datetime.now,enable=True) #user will be replace with the current user
     name = request.form['name']
     formu = request.form['formu']
     call_url = request.form['callurl']
@@ -44,7 +45,7 @@ def edit_action(action_id):
         request_data = request.form['request']
         track = action.track
         track['updated'] = datetime.now()
-        track['user'] = 'fui yo ahora'  # it will be replaced with the current user
+        track['user'] = current_user.get_id()  # it will be replaced with the current user
         action = Action(name=name, call_url=call_url,request=request_data,track=track,form=formu)
 
         flash("action updated successfully")
@@ -60,7 +61,7 @@ def delete_action(action_id):
         track = action.track
 
         track['enable'] = False
-        track['user'] = 'deleted by yo'
+        track['user'] = current_user.get_id()
         action.update(track=track)
         flash("action deleted successfully")
     else:
@@ -76,7 +77,7 @@ def reset_action(action_id):
         track = action.track
 
         track['enable'] = True
-        track['user'] = 'recover by yo'
+        track['user'] = current_user.get_id()
         action.update(track=track)
         flash("action recover successfully")
     else:
@@ -85,6 +86,8 @@ def reset_action(action_id):
     return redirect('/action')
 
 
-
+@action_bp.errorhandler(401)
+def unauthorized_handler(error):
+    return render_template('error.html'), 401
 
 

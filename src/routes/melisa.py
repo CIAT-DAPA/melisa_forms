@@ -4,21 +4,25 @@ from melisa_orm.models.form import Form
 from melisa_orm import Track,Validation, Melisa
 from melisa_orm.models.melisa import Melisa
 from datetime import datetime
-
+from flask_login import current_user
 melisa_bp = Blueprint('melisa', __name__)
 @melisa_bp.route('/melisa')
+@login_required
+
 def show_melisa():
     melisa = Melisa.objects()
     return render_template('melisa.html', melisa=melisa)
 @melisa_bp.route('/addmelisa')
+@login_required
 def addd_melisa():
     boolvalues=[True,False]
 
     return render_template('add_melisa.html',melisabool=boolvalues)
 
 @melisa_bp.route('/melisa/add', methods=['POST'])
+@login_required
 def add_melisa():
-    track=Track(user='user',created=datetime.now(), updated=datetime.now,enable=True)
+    track=Track(user=current_user.get_id(),created=datetime.now(), updated=datetime.now,enable=True)
     form_data = request.form
     name = form_data['name']
     url_post = form_data['urlpost']
@@ -45,6 +49,7 @@ def add_melisa():
     flash("Melisa added successfully")
     return redirect('/melisa')
 @melisa_bp.route('/editmelisa/<string:melisa_id>', methods=['GET', 'POST'])
+@login_required
 def edit_melisa(melisa_id):
     boolvalues=[True,False]
 
@@ -62,7 +67,7 @@ def edit_melisa(melisa_id):
         track = melisa.track
 
         track['enable'] = True
-        track['user'] = 'edited by yo'
+        track['user'] = current_user.get_id()
         track['updated'] = datetime.now()
         melisa.update(
             name=name,
@@ -79,6 +84,7 @@ def edit_melisa(melisa_id):
     return render_template('edit_melisa.html', melisa=melisa,melisabool=boolvalues)
 
 @melisa_bp.route('/deletemelisa/<string:melisa_id>')
+@login_required
 def delete_melisa(melisa_id):
     melisa = Melisa.objects(id=melisa_id).first()
 
@@ -87,7 +93,7 @@ def delete_melisa(melisa_id):
 
         track['enable'] = False
         track['updated'] = datetime.now()
-        track['user'] = 'deleted by yo'
+        track['user'] = current_user.get_id()
         melisa.update(track=track)
         flash("melisa deleted successfully")
     else:
@@ -96,6 +102,7 @@ def delete_melisa(melisa_id):
     return redirect('/melisa')
 
 @melisa_bp.route('/resetmelisa/<string:melisa_id>')
+@login_required
 def reset_melisa(melisa_id):
     melisa = Melisa.objects(id=melisa_id).first()
 
@@ -104,10 +111,14 @@ def reset_melisa(melisa_id):
 
         track['enable'] = True
         track['updated'] = datetime.now()
-        track['user'] = 'recover by yo'
+        track['user'] = current_user.get_id()
         melisa.update(track=track)
         flash("melisa recover successfully")
     else:
         flash("melisa not found")
 
     return redirect('/melisa')
+
+@melisa_bp.errorhandler(401)
+def unauthorized_handler(error):
+    return render_template('error.html'), 401
