@@ -1,0 +1,97 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row justify-content-center align-items-center vh-100">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center">Edit Melisa</h2>
+                    <p class="">Update the fields</p>
+                    <form method="POST" action="/editmelisa/{{ melisa.id }}">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name Melisa:</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ melisa.name }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="urlpost" class="form-label">Url Post</label>
+                            <input type="text" class="form-control" id="urlpost" name="urlpost" pattern="https?://.+" value="{{ melisa.url_post }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="token" class="form-label">Token</label>
+                            <input type="text" class="form-control" id="token" name="token" value="{{ melisa.token }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="sayhi" class="form-label">Say hi?</label>
+                            <select class="form-select" id="sayhi" name="sayhi" required>
+                                <option value="" disabled>Select</option>
+                                {% for bool in melisabool %}
+                                    <option value="{{ bool }}" {% if bool == melisa.sa_yhi %}selected{% endif %}>{{ bool }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="saywait" class="form-label">Say wait?</label>
+                            <select class="form-select" id="saywait" name="saywait" required>
+                                <option value="" disabled>Select</option>
+                                {% for bool in melisabool %}
+                                    <option value="{{ bool }}" {% if bool == melisa.say_wait %}selected{% endif %}>{{ bool }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3" id="countryContainer">
+                            <h3 class="text-center">Countries</h3>
+                            {% for country in melisa.countries %}
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" name="countries[]" value="{{ country }}" placeholder="Enter a country">
+                                    <button type="button" class="btn btn-outline-danger" onclick="removeCountryField(this)">Delete</button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-success add-button add" title="Add Country" onclick="addCountryField()">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-warning edit-button" type="button">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function addCountryField() {
+        var inputElement = document.createElement('input');
+        inputElement.type = 'text';
+        inputElement.className = 'form-control';
+        inputElement.name = 'countries[]';
+        inputElement.placeholder = 'Ingrese un país';
+
+        var removeButton = document.createElement('button');
+        removeButton.className = 'btn btn-outline-secondary';
+        removeButton.type = 'button';
+        removeButton.textContent = 'Delete';
+        removeButton.className = 'btn btn-outline-danger';
+        removeButton.onclick = function () {
+            removeCountryField(inputElement);
+        };
+
+        var containerDiv = document.createElement('div');
+        containerDiv.className = 'input-group mb-3';
+        containerDiv.appendChild(inputElement);
+        containerDiv.appendChild(removeButton);
+
+        document.getElementById('countryContainer').appendChild(containerDiv);
+    }
+
+    function removeCountryField(inputElement) {
+        var container = inputElement.parentNode;
+
+        container.parentNode.removeChild(container);
+    }
+</script>
+{% endblock %}
