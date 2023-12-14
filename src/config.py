@@ -13,3 +13,4 @@ else:
     config['HOST'] = '0.0.0.0'
     config['PORT'] = os.getenv('MELISA_ADMIN_PORT')
     config['CONNECTION_DB']=os.getenv('CONNECTION_DB')
+    config['CONNECTION_DB2']=os.getenv('CONNECTION_DB2')
