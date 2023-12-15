@@ -29,4 +29,4 @@ def login():
 def logout():
     logout_user()
     flash('Logged out', 'success')
-    return redirect('/login')
+    return redirect('/')
