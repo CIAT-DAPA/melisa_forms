@@ -40,9 +40,8 @@ class User(UserMixin):
         roles = Roles.objects(_id__in=user_roles_ids).using('db2')
 
         for role in roles:
-            print(role.Name)
 
-            if role.Name == 'ADMIN':
+            if role.Name in ['ADMIN', 'MELISA-FORMS']:
                 return True
 
         return False

@@ -48,7 +48,7 @@ def edit_action(action_id):
         request_data = request.form['request']
         track = action.track
         track['updated'] = datetime.now()
-        track['user'] = current_user.get_id()  # it will be replaced with the current user
+        track['user'] = current_user.get_id()  
         action = Action(name=name, call_url=call_url,request=request_data,track=track,form=formu)
 
         flash("action updated successfully")
