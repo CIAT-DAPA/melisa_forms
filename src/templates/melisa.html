@@ -36,6 +36,7 @@
                         <th>Token</th>
                         <th>Si hi</th>
                         <th>Si wait</th>
+                        <th>Countries</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
@@ -47,6 +48,8 @@
                         <td>{{ ml.token }}</td>
                         <td>{{ ml.say_hi  }}</td>
                         <td>{{ ml.say_wait  }}</td>
+                        <td>{{ ml.countries|join(', ') }}</td>
+
                         
                         <td>
                             <div class="text-center">
