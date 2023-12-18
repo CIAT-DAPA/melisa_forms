@@ -38,6 +38,7 @@
                         <th>Kind</th>
                         <th>Order</th>
                         <th>Status</th>
+                        <th>Validations</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
@@ -57,6 +58,14 @@
                         <td>{{ q.order }}</td>
                         
                         <td>{{ "Enabled" if q.track.enable else "Disabled" }}</td>
+                        <td>
+                            {% for validation in q.validations %}
+                                Name: {{ validation.name }} <br>
+                                Exp: {{ validation.exp }} <br>
+                                Error Msg: {{ validation.error_msg }} <br>
+                                {% if not loop.last %}<br>{% endif %}  <!-- Separador si no es el último elemento -->
+                            {% endfor %}
+                        </td>
                         <td>
                             <div class="text-center">
                                 {% if q.track.enable %}
