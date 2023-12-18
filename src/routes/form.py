@@ -40,7 +40,7 @@ def edit_form(form_id):
 
         track = form.track
         track['updated'] = datetime.now()
-        track['user'] = current_user.get_id() #it will be replace with the current user
+        track['user'] = current_user.get_id()
         form.update(name=name, command=command, track=track,ext_id=ext_id)
 
         flash("form updated successfully")
